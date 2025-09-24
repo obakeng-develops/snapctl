@@ -2,6 +2,7 @@ import typer
 from typing_extensions import Annotated
 
 from cli.internal.config import read_config
+from cli.internal.aws.plan import plan as aws_plan
 
 app = typer.Typer()
 
@@ -13,4 +14,11 @@ def plan(
     """
     config = read_config(file_path)
     
-    print(config)
+    provider = config["provider"]["aws"]
+    
+    match provider:
+        case "aws":
+            aws_plan(config)
+        case _:
+            typer.echo(f"Provider {provider} is not supported yet.")
+            raise typer.Exit(code=1)
