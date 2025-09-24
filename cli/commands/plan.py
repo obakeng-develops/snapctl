@@ -2,7 +2,7 @@ import typer
 from typing_extensions import Annotated
 
 from cli.internal.config import read_config
-from cli.internal.aws.plan import plan as aws_plan
+from cli.internal.aws.plan import aws_plan
 
 app = typer.Typer()
 
@@ -14,7 +14,7 @@ def plan(
     """
     config = read_config(file_path)
     
-    provider = config["provider"]["aws"]
+    provider = config["provider"]["name"]
     
     match provider:
         case "aws":
