@@ -184,6 +184,7 @@ dependencies = [
     { name = "boto3" },
     { name = "pyyaml" },
     { name = "ruff" },
+    { name = "rich" },
     { name = "typer" },
 ]
 
@@ -191,7 +192,6 @@ dependencies = [
 requires-dist = [
     { name = "boto3", specifier = ">=1.40.37" },
     { name = "pyyaml", specifier = ">=6.0.2" },
-    { name = "ruff", specifier = ">=0.13.1" },
     { name = "typer", specifier = ">=0.19.2" },
 ]
 
