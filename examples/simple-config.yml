@@ -6,6 +6,7 @@ provider:
 
 auth:
   role_arn: arn:aws:iam::111111111111:role/BackupExecutionRole
+  profile: "starboy"
 
 protect:
   schedule: daily@3am
