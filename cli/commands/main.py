@@ -1,5 +1,5 @@
 import typer
-from plan import app as plan_app
+from cli.commands.plan import app as plan_app
 
 app = typer.Typer()
 

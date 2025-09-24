@@ -1,7 +1,7 @@
 import typer
 from typing_extensions import Annotated
 
-from internal.config import read_config
+from cli.internal.config import read_config
 
 app = typer.Typer()
 
