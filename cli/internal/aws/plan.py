@@ -4,6 +4,7 @@ from .session import create_session_with_profile, create_session_with_role
 
 def aws_plan(config: dict):
     service = config["protect"]["resources"][0]["type"]
+    region = config["provider"]["region"]
     auth = config["auth"]
     
     # Determine authentication method
@@ -16,6 +17,6 @@ def aws_plan(config: dict):
     else:
         raise ValueError("No valid authentication method found in config")
     
-    client = get_client(service, session)
+    client = get_client(service, session, region)
     
     print(client)
