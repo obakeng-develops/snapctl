@@ -5,7 +5,7 @@ provider:
   region: us-east-1
 
 auth:
-  role_arn: arn:aws:iam::111111111111:role/BackupExecutionRole
+  #role_arn: arn:aws:iam::111111111111:role/BackupExecutionRole
   profile: "starboy"
 
 protect:
