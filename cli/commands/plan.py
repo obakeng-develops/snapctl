@@ -1,6 +1,8 @@
 import typer
 from typing_extensions import Annotated
 
+from internal.config import read_config
+
 app = typer.Typer()
 
 @app.command()
@@ -9,4 +11,6 @@ def plan(
 ):
     """Speculatively show a plan of all the resources that will be backed up.
     """
-    print("Hello from snapctl!")
+    config = read_config(file_path)
+    
+    print(config)
