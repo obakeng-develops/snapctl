@@ -69,7 +69,6 @@ $ snapctl run --config backup-config.yaml
 - Configuration as Code: Version-controlled backup and disaster recovery policies.
 - Minimal IAM footprint: Least-privileged IAM policies.
 
-
 ### Roadmap
 - AWS
     - [ ] RDS (in-progress)
