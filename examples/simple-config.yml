@@ -13,6 +13,6 @@ protect:
   retention: 7d
   resources:
     - type: rds
-      identifier: prod-db-cluster
-      tags: "tag: Owner=devops"
+      name: production-databases
+      tags: "tag:Owner=devops"
 
