@@ -1,6 +1,7 @@
 import boto3
 from .client import get_client
 from .session import create_session_with_profile, create_session_with_role
+from .formatter import format_rds_cluster
 
 def aws_plan(config: dict):
     service = config["protect"]["resources"][0]["type"]
@@ -18,5 +19,13 @@ def aws_plan(config: dict):
         raise ValueError("No valid authentication method found in config")
     
     client = get_client(service, session, region)
+    db_cluster = client.describe_db_clusters(
+        DBClusterIdentifier=config["protect"]["resources"][0]["identifier"]
+    )
     
-    print(client)
+    if db_cluster is None:
+        raise ValueError("No DB cluster found with the specified identifier")
+
+    match service:
+        case "rds":
+            format_rds_cluster(db_cluster)
