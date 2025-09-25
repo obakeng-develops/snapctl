@@ -2,11 +2,13 @@ import boto3
 from .client import get_client
 from .session import create_session_with_profile, create_session_with_role
 from .formatter import format_rds_cluster
+from .resource_filtering import list_resource_by_tag
 
 def aws_plan(config: dict):
     service = config["protect"]["resources"][0]["type"]
     region = config["provider"]["region"]
     auth = config["auth"]
+    tags = config["protect"]["resources"][0]["discover"]
     
     if "role_arn" in auth:
         session = create_session_with_role(auth)
@@ -17,13 +19,8 @@ def aws_plan(config: dict):
     
     client = get_client(service, session, region)
     
-    db_cluster = client.describe_db_clusters(
-        DBClusterIdentifier=config["protect"]["resources"][0]["identifier"]
-    )
-    
-    if db_cluster is None:
-        raise ValueError("No DB cluster found with the specified identifier")
+    instances = list_resource_by_tag(client, service, tags)
 
     match service:
         case "rds":
-            format_rds_cluster(db_cluster)
+            format_rds_cluster(instances)
