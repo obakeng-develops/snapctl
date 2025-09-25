@@ -9,15 +9,14 @@ def aws_plan(config: dict):
     auth = config["auth"]
     
     if "role_arn" in auth:
-        auth_type = "role"
         session = create_session_with_role(auth)
     elif "profile" in auth:
-        auth_type = "profile"
         session = create_session_with_profile(auth)
     else:
         raise ValueError("No valid authentication method found in config")
     
     client = get_client(service, session, region)
+    
     db_cluster = client.describe_db_clusters(
         DBClusterIdentifier=config["protect"]["resources"][0]["identifier"]
     )
