@@ -55,13 +55,18 @@ protect:
       discover: "tag:Owner=devops"
 ```
 
-To run a backups:
+To run backups:
 ```bash
 # Test configuration
 $ snapctl validate config --config backup-config.yaml
 
 # Execute a backup
 $ snapctl run --config backup-config.yaml
+```
+
+You can also validate the profile or IAM role using the following:
+```bash
+$ snapctl validate auth --config backup-config.yaml
 ```
 
 ### Production-Grade by Default:
