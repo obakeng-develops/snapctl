@@ -14,5 +14,5 @@ protect:
   resources:
     - type: rds
       name: production-databases
-      tags: "tag:Owner=devops"
+      discover: "tag:Owner=devops"
 
