@@ -8,7 +8,6 @@ def aws_plan(config: dict):
     region = config["provider"]["region"]
     auth = config["auth"]
     
-    # Determine authentication method
     if "role_arn" in auth:
         auth_type = "role"
         session = create_session_with_role(auth)
