@@ -1,0 +1,18 @@
+app: "facebook"
+
+provider:
+  name: aws
+  region: us-east-1
+
+auth:
+  #role_arn: arn:aws:iam::111111111111:role/BackupExecutionRole
+  profile: "starboy"
+
+protect:
+  schedule: daily@12pm
+  retention: 7d
+  resources:
+    - type: rds
+      name: production-databases
+      discover: "tag:Unit=devops"
+
