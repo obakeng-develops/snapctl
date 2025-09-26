@@ -2,10 +2,10 @@
 `snapctl` is a CLI tool that allows you to setup production-grade backups and disaster recovery in under 5 minutes with one config file. Currently, it only supports AWS RDS. But we're working towards supporting other services within the AWS ecosystem.
 
 ### Features
-- Automated RDS snapshots: daily/hourly schedules, retention policies.
-- One-command backup/restore/failover - spin up a standby or replacement DB fast.
-- Config-as-code: version your DR plan in Git alongside your app.
-- Data stays in your account: no third-party storage or agents.
+- **Automated RDS snapshots**: daily/hourly schedules, retention policies.
+- **One-command backup/restore/failover**: spin up a standby or replacement DB fast.
+- **Config-as-code**: version your DR plan in Git alongside your app.
+- **Data stays in your account**: no third-party storage or agents.
 
 ### Quick Start
 #### Installation
