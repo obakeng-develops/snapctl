@@ -59,7 +59,7 @@ def list_resource_by_tag(client: boto3.client, service: str, tag_filter: str) ->
                     db_arn = db['DBInstanceArn']
                     tags_response = client.list_tags_for_resource(ResourceName=db_arn)
                         
-                    if matches_tag_filter(tags_response['Tag_list'], or_groups):
+                    if matches_tag_filter(tags_response['TagList'], or_groups):
                         matching_resources.append(db)
         case _:
             raise ValueError(f"Unsupported service: {service}")
