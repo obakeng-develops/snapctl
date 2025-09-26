@@ -9,10 +9,10 @@ auth:
   profile: "starboy"
 
 protect:
-  schedule: daily@3am
+  schedule: daily@12pm
   retention: 7d
   resources:
     - type: rds
       name: production-databases
-      discover: "tag:Owner=devops"
+      discover: "tag:Unit=devops"
 
