@@ -10,8 +10,8 @@ def aws_plan(config: dict, session: boto3.Session):
     
     client = get_client(service, session, region)
     
-    instances = list_resource_by_tag(client, service, tags)
+    resources = list_resource_by_tag(client, service, tags)
 
     match service:
         case "rds":
-            format_rds_cluster(instances)
+            format_rds_cluster(config, resources)
