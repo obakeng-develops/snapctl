@@ -4,6 +4,7 @@ from typing_extensions import Annotated
 from cli.internal.utility.config import read_config
 from cli.internal.aws.plan import aws_plan
 from cli.internal.aws.session import create_session_with_profile, create_session_with_role
+
 app = typer.Typer()
 
 @app.command()
