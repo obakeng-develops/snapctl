@@ -30,6 +30,17 @@ def create_session_with_role(auth_config: dict) -> boto3.Session:
         aws_session_token=credentials['SessionToken']
     )
 
-def create_session_with_profile(auth_config):
+def create_session_with_profile(auth_config) -> boto3.Session:
     """Create session with a named profile"""
     return boto3.Session(profile_name=auth_config["profile"])
+
+def create_session(auth_config) -> boto3.Session:
+    session = None
+    if "role_arn" in auth_config:
+        session = create_session_with_role(auth_config)
+    elif "profile" in auth_config:
+        session = create_session_with_profile(auth_config)
+    else:
+        raise ValueError("No valid authentication method found in config")
+    
+    return session
