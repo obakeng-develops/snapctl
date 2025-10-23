@@ -3,7 +3,6 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.tree import Tree
 from rich import box
-import re
 
 def format_rds_cluster(config: dict, instances: list[dict[str, Any]]):
     """Format RDS cluster data for terminal display with only important info"""
