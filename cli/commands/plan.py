@@ -3,7 +3,8 @@ from typing_extensions import Annotated
 
 from cli.internal.utility.config import read_config
 from cli.internal.aws.plan import aws_plan
-from cli.internal.aws.session import create_session_with_profile, create_session_with_role
+from cli.internal.aws.session import create_session
+
 app = typer.Typer()
 
 @app.command()
@@ -16,13 +17,7 @@ def plan(
     provider = config["provider"]["name"]
     
     auth = config["auth"]
-    session = None
-    if "role_arn" in auth:
-        session = create_session_with_role(auth)
-    elif "profile" in auth:
-        session = create_session_with_profile(auth)
-    else:
-        raise ValueError("No valid authentication method found in config")
+    session = create_session(auth)
     
     match provider:
         case "aws":
