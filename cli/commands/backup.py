@@ -78,16 +78,24 @@ def create_cluster_snapshot(cluster_id: str, prefix: str, session: boto3.Session
             DBClusterIdentifier=cluster_id,
             Tags=[
                 {
-                    'Key': 'CreatedBy',
-                    'Value': 'snapctl'
+                    "Key": "resource",
+                    "Value": f"{cluster_id}"
                 },
                 {
-                    'Key': 'CreatedAt',
-                    'Value': timestamp
+                    "Key": "createdAt",
+                    "Value": timestamp
                 },
                 {
-                    'Key': 'Prefix',
-                    'Value': prefix
+                    "Key": "prefix",
+                    "Value": prefix
+                },
+                {
+                    "Key": "version",
+                    "Value": "0.1.0"
+                },
+                {
+                    "Key": "origin",
+                    "Value": "snapctl"
                 }
             ]
         )
