@@ -37,8 +37,9 @@ def backup(
                     
                 match resource_type:
                     case "rds":
-                        result = initiate_snapshot(resource, session, region)
-                        typer.echo(f"Result: {result}")
+                        if resource["Status"] == "available":
+                            result = initiate_snapshot(resource, session, region)
+                            typer.echo(f"Result: {result}")
         case _:
             typer.echo(f"Provider {provider} is not supported yet.")
             raise typer.Exit(code=1)
