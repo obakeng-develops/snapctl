@@ -1,3 +1,4 @@
+import resource
 import typer
 import boto3
 import time
@@ -24,61 +25,74 @@ def backup(
     
     auth = config["auth"]
     session = create_session(auth)
+    region = config["provider"]["region"]
     
     match provider:
         case "aws":
-            service = config["protect"]["resources"][0]["type"]
-            region = config["provider"]["region"]
-            tags = config["protect"]["resources"][0]["discover"]
-            resource_type = ""
-            
-            client = get_client(service, session, region)
-            
-            resources = list_resource_by_tag(client, service, tags)
-            
-            available_clusters = [
-                resource for resource in resources if resource["Status"] == "available"
-            ]
-            
-            resource_type = ""
-            if available_clusters and available_clusters[0]["Engine"].startswith("aurora"):
-                resource_type = "rds"
-                    
-            match resource_type:
-                case "rds":    
-                    in_progress = []
-                    pending = list(available_clusters)
-                    
-                    while pending or in_progress:
-                        while len(in_progress) < parallel and pending:
-                            resource = pending.pop(0)
-                            snapshot_result = initiate_snapshot(resource, session, region)
-                            in_progress.append({
+            for resource_config in config["protect"]["resources"]:
+                service_type = resource_config["type"]
+                resource_name = resource_config["name"]
+                tags = resource_config["tags"]
+                
+                typer.echo(f"\n=== Processing {resource_name} ({service_type}) ===")
+                typer.echo(f"Discovering resources with: {tags}")
+                
+                client = get_client(service_type, session, region)
+                resources = list_resource_by_tag(client, service_type, tags)
+                
+                if not resources:
+                    typer.echo(f"No resources found for {resource_name}")
+                
+                typer.echo(f"Found {len(resources)} resources(s)")
+                        
+                match service_type:
+                    case "rds":    
+                        backup_rds_resources(resources, session, region, parallel)
+                    case _:
+                        typer.echo(f"Resource type {service_type} is not supported yet.")
+                        raise typer.Exit(code=1)
+        case _:
+            typer.echo(f"Provider {provider} is not supported yet.")
+            raise typer.Exit(code=1)
+
+def backup_rds_resources(resources: list[dict[str, any]], session: boto3.Session, region: str, parallel: int):
+    """Backup RDS resources with parallel execution and polling."""
+    available_clusters = [
+        resource for resource in resources if resource["Status"] == "available"
+    ]
+    
+    if not available_clusters:
+        typer.echo("No available Aurora clusters found to backup")
+        return
+
+    typer.echo(f"Starting backup for {len(available_clusters)} Aurora cluster(s)")
+    
+    in_progress = []
+    pending = list(available_clusters)
+
+    while pending or in_progress:
+        while len(in_progress) < parallel and pending:
+            resource = pending.pop(0)
+            snapshot_result = initiate_snapshot(resource, session, region)
+            in_progress.append({
                                 'cluster': resource['DBClusterIdentifier'],
                                 'snapshot_id': snapshot_result['DBClusterSnapshotIdentifier'],
                                 'snapshot_arn': snapshot_result['DBClusterSnapshotArn'],
                                 'started': time.time()
-                            })
-                            typer.echo(f"Started backup: {snapshot_result['DBClusterSnapshotIdentifier']}")
+            })
+            typer.echo(f"Started backup: {snapshot_result['DBClusterSnapshotIdentifier']}")
                             
                         # Poll for completion
-                        if in_progress:
-                            time.sleep(POLL_INTERVAL)
+            if in_progress:
+                time.sleep(POLL_INTERVAL)
                             
-                            completed = []
-                            for backup in in_progress:
-                                status = check_snapshot_status(backup['snapshot_id'], session, region)
-                                if status in ["available", "failed"]:
-                                    duration = time.time() - backup['started']
-                                    typer.echo(f"Backup {backup['snapshot_id']}: {status} (took {duration:.0f}s)")
-                                    completed.append(backup)
+                completed = []
+                for backup in in_progress:
+                    status = check_snapshot_status(backup['snapshot_id'], session, region)
+                    if status in ["available", "failed"]:
+                        duration = time.time() - backup['started']
+                        typer.echo(f"Backup {backup['snapshot_id']}: {status} (took {duration:.0f}s)")
+                        completed.append(backup)
                                     
-                            for backup in completed:
-                                in_progress.remove(backup)
-                                
-                case _:
-                    typer.echo(f"Resource type {resource_type} is not supported yet.")
-                    raise typer.Exit(code=1)
-        case _:
-            typer.echo(f"Provider {provider} is not supported yet.")
-            raise typer.Exit(code=1)
+                    for backup in completed:
+                        in_progress.remove(backup)
