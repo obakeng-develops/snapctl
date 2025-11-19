@@ -29,8 +29,6 @@ protect:
     - type: rds
       name: production-databases
       discover: "tag:Environment=production AND tag:Backup=required"
-      retention: 7d
-      schedule: daily@3am
 ```
 
 You can specify a `profile` instead of the `role_arn` in the `auth` section like this:
@@ -45,14 +43,9 @@ You can also set the `retention` and `schedule` globally for all resources like 
 ```yaml
 # backup-config.yaml
 protect:
-    retention: 7d
-    schedule: daily@3am
     - type: rds
       name: production-databases
       discover: "tag:Environment=production AND tag:Backup=required"
-    - type: ebs
-      name: ebs-volumes-production
-      discover: "tag:Owner=devops"
 ```
 
 To run backups:
@@ -76,7 +69,6 @@ $ snapctl validate auth --config backup-config.yaml
 
 ### Roadmap
 - AWS
-    - [ ] RDS (in-progress)
     - [ ] Aurora (in-progress)
     - [ ] EBS
     - [ ] EC2
