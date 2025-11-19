@@ -1,9 +1,5 @@
-import resource
 import typer
-import boto3
-import time
-from typing import Annotated, Dict, Any
-from datetime import datetime
+from typing import Annotated
 
 from cli.internal.utility.config import read_config
 from cli.internal.aws.session import create_session
