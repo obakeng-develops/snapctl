@@ -8,8 +8,8 @@ def format_rds_cluster(config: dict, instances: list[dict[str, Any]]):
     """Format RDS cluster data for terminal display with only important info"""
     app_name = config["app"]
     region = config["provider"]["region"]
-    resource_name = config["protect"]["resources"][0]["name"]
-    tags = config["protect"]["resources"][0]["discover"]
+    resource_name = config["backup"]["resources"][0]["name"]
+    tags = config["backup"]["resources"][0]["discover"]
     auth = config["auth"]
     
     console = Console()

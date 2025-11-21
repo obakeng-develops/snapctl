@@ -4,9 +4,9 @@ from .formatter import format_rds_cluster
 from .resource_filtering import list_resource_by_tag
 
 def aws_plan(config: dict, session: boto3.Session):
-    service = config["protect"]["resources"][0]["type"]
+    service = config["backup"]["resources"][0]["type"]
     region = config["provider"]["region"]
-    tags = config["protect"]["resources"][0]["discover"]
+    tags = config["backup"]["resources"][0]["discover"]
     
     client = get_client(service, session, region)
     

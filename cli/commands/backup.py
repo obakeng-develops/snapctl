@@ -25,7 +25,7 @@ def backup(
     
     match provider:
         case "aws":
-            for resource_config in config["protect"]["resources"]:
+            for resource_config in config["backup"]["resources"]:
                 service_type = resource_config["type"]
                 resource_name = resource_config["name"]
                 tags = resource_config["tags"]
