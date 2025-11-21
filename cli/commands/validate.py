@@ -13,7 +13,7 @@ def validate(
     config = read_config(file_path)
     app_name = config.get("app", None)
     provider = config.get("provider", None)
-    protect = config.get("protect", None)
+    backup = config.get("backup", None)
     
     if app_name is None:
         typer.echo("App name key is required")
@@ -31,17 +31,17 @@ def validate(
         typer.echo("Region key is required")
         raise typer.Exit(code=1)
     
-    if protect.get("resources", None) is None:
+    if backup.get("resources", None) is None:
         typer.echo("Protect resources key is required")
         raise typer.Exit(code=1)
     
-    resources = protect.get("resources", None)
+    resources = backup.get("resources", None)
     
     if resources is None:
         typer.echo("Resources key is required")
         raise typer.Exit(code=1)
     
-    for resource in protect["resources"]:
+    for resource in backup["resources"]:
         if resource["type"] is None:
             typer.echo("Resource type is required")
             raise typer.Exit(code=1)
