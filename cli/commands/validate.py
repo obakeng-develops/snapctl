@@ -1,9 +1,12 @@
 import typer
+import structlog
 from typing import Annotated
 from cli.internal.utility.config import read_config
 from cli.internal.aws.session import create_session
 
 app = typer.Typer()
+
+logger = structlog.get_logger()
 
 @app.command()
 def validate(
@@ -16,55 +19,55 @@ def validate(
     backup = config.get("backup", None)
     
     if app_name is None:
-        typer.echo("App name key is required")
+        logger.error("App name key is required")
         raise typer.Exit(code=1)
     
     if provider is None:
-        typer.echo("Provider key is required")
+        logger.error("Provider key is required")
         raise typer.Exit(code=1)
     
     if provider["name"] is None:
-        typer.echo("Provider name key is required")
+        logger.error("Provider name key is required")
         raise typer.Exit(code=1)
     
     if provider.get("region", None) is None:
-        typer.echo("Region key is required")
+        logger.error("Region key is required")
         raise typer.Exit(code=1)
     
     if backup.get("resources", None) is None:
-        typer.echo("Protect resources key is required")
+        logger.error("Protect resources key is required")
         raise typer.Exit(code=1)
     
     resources = backup.get("resources", None)
     
     if resources is None:
-        typer.echo("Resources key is required")
+        logger.error("Resources key is required")
         raise typer.Exit(code=1)
     
     for resource in backup["resources"]:
         if resource["type"] is None:
-            typer.echo("Resource type is required")
+            logger.error("Resource type is required")
             raise typer.Exit(code=1)
         
         if resource["name"] is None:
-            typer.echo("Resource name is required")
+            logger.error("Resource name is required")
             raise typer.Exit(code=1)
         
         if resource["discover"] is None:
-            typer.echo("Resource discover is required")
+            logger.error("Resource discover is required")
             raise typer.Exit(code=1)
     
     if auth:
         if provider["name"] == "aws":
             validate_auth(config)
         else:
-            typer.echo("Provider is not supported yet")
+            logger.error("Provider is not supported yet")
             raise typer.Exit(code=1)
     else:
-        typer.echo("Auth is required")
+        logger.error("Auth is required")
         raise typer.Exit(code=1)
         
-    typer.echo("Validation successful")
+    logger.info("Validation successful")
     
 def validate_auth(config: dict):
     auth = config["auth"]
@@ -74,7 +77,7 @@ def validate_auth(config: dict):
     elif "role_arn" in auth:
         validate_role_arn(auth)
     else:
-        typer.echo("No valid authentication method found in config")
+        logger.error("No valid authentication method found in config")
         raise typer.Exit(code=1)
         
 def validate_profile(auth: dict):

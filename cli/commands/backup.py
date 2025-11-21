@@ -1,4 +1,5 @@
 import typer
+import structlog
 from typing import Annotated
 
 from cli.internal.utility.config import read_config
@@ -10,6 +11,8 @@ from cli.internal.aws.backup import backup_rds_resources
 POLL_INTERVAL = 30 #seconds
 
 app = typer.Typer()
+
+logger = structlog.get_logger()
 
 @app.command()
 def backup(
@@ -30,23 +33,23 @@ def backup(
                 resource_name = resource_config["name"]
                 tags = resource_config["tags"]
                 
-                typer.echo(f"\n=== Processing {resource_name} ({service_type}) ===")
-                typer.echo(f"Discovering resources with: {tags}")
+                logger.info(f"\n=== Processing {resource_name} ({service_type}) ===")
+                logger.info(f"Discovering resources with: {tags}")
                 
                 client = get_client(service_type, session, region)
                 resources = list_resource_by_tag(client, service_type, tags)
                 
                 if not resources:
-                    typer.echo(f"No resources found for {resource_name}")
+                    logger.error(f"No resources found for {resource_name}")
                 
-                typer.echo(f"Found {len(resources)} resources(s)")
+                logger.info(f"Found {len(resources)} resources(s)")
                         
                 match service_type:
                     case "rds":    
                         backup_rds_resources(resources, session, region, parallel)
                     case _:
-                        typer.echo(f"Resource type {service_type} is not supported yet.")
+                        logger.error(f"Resource type {service_type} is not supported yet.")
                         raise typer.Exit(code=1)
         case _:
-            typer.echo(f"Provider {provider} is not supported yet.")
+            logger.error(f"Provider {provider} is not supported yet.")
             raise typer.Exit(code=1)
