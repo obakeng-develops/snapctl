@@ -7,7 +7,7 @@ provider:
 auth:
   profile: "starboy"
 
-protect:
+backup:
   resources:
     - type: rds
       name: production-databases
