@@ -1,5 +1,4 @@
 from typing import Dict, Any
-import typer
 import structlog
 import boto3 
 from datetime import datetime

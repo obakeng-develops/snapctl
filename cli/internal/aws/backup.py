@@ -1,4 +1,3 @@
-import typer
 import structlog
 import boto3
 import time
