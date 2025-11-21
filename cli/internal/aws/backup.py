@@ -1,9 +1,11 @@
-import typer
+import structlog
 import boto3
 import time
 from .snapshotting import initiate_snapshot, check_snapshot_status
 
 POLL_INTERVAL = 30 #seconds
+
+logger = structlog.get_logger()
 
 def backup_rds_resources(resources: list[dict[str, any]], session: boto3.Session, region: str, parallel: int):
     """Backup RDS resources with parallel execution and polling."""
@@ -12,10 +14,10 @@ def backup_rds_resources(resources: list[dict[str, any]], session: boto3.Session
     ]
     
     if not available_clusters:
-        typer.echo("No available Aurora clusters found to backup")
+        logger.error("No available Aurora clusters found to backup")
         return
 
-    typer.echo(f"Starting backup for {len(available_clusters)} Aurora cluster(s)")
+    logger.info(f"Starting backup for {len(available_clusters)} Aurora cluster(s)")
     
     in_progress = []
     pending = list(available_clusters)
@@ -30,7 +32,7 @@ def backup_rds_resources(resources: list[dict[str, any]], session: boto3.Session
                                 'snapshot_arn': snapshot_result['DBClusterSnapshotArn'],
                                 'started': time.time()
             })
-            typer.echo(f"Started backup: {snapshot_result['DBClusterSnapshotIdentifier']}")
+            logger.info(f"Started backup: {snapshot_result['DBClusterSnapshotIdentifier']}")
                             
                         # Poll for completion
             if in_progress:
@@ -41,7 +43,7 @@ def backup_rds_resources(resources: list[dict[str, any]], session: boto3.Session
                     status = check_snapshot_status(backup['snapshot_id'], session, region)
                     if status in ["available", "failed"]:
                         duration = time.time() - backup['started']
-                        typer.echo(f"Backup {backup['snapshot_id']}: {status} (took {duration:.0f}s)")
+                        logger.info(f"Backup {backup['snapshot_id']}: {status} (took {duration:.0f}s)")
                         completed.append(backup)
                                     
                     for backup in completed:

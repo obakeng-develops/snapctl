@@ -1,8 +1,10 @@
 from typing import Dict, Any
-import typer
+import structlog
 import boto3 
 from datetime import datetime
 from .client import get_client
+
+logger = structlog.get_logger()
 
 def initiate_snapshot(resource: dict[str, any], session: boto3.Session, region: None = "us-east-1") -> str:
     snapshot_results = []
@@ -18,14 +20,14 @@ def initiate_snapshot(resource: dict[str, any], session: boto3.Session, region: 
             "snapshot_arn": snapshot_result["DBClusterSnapshotArn"]
         })
                             
-        typer.echo(f"Successfully initiated snapshot for cluster: {resource_id}")
+        logger.info(f"Successfully initiated snapshot for cluster: {resource_id}")
     except Exception as e:
         snapshot_results.append({
             'cluster_id': resource_id,
             'status': 'failed',
             'error': str(e)
         })
-        typer.echo(f"Failed to create snapshot for cluster {resource_id}: {str(e)}")
+        logger.error(f"Failed to create snapshot for cluster {resource_id}: {str(e)}")
 
 def check_snapshot_status(snapshot_id: str, session: boto3.Session, region: str) -> str:
     """Check the current status of a snapshot."""
@@ -72,5 +74,5 @@ def create_cluster_snapshot(cluster_id: str, prefix: str, session: boto3.Session
         return response['DBClusterSnapshot']
         
     except Exception as e:
-        typer.echo(f"Error creating snapshot for {cluster_id}: {str(e)}")
+        logger.error(f"Error creating snapshot for {cluster_id}: {str(e)}")
         raise
