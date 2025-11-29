@@ -50,8 +50,6 @@ jobs:
         with:
           enable-cache: true
       - run: uv sync
-      - run: uv add --dev mypy boto3-stubs types-PyYAML
-      
       - name: Type check
         run: uv run mypy cli/
   
@@ -63,7 +61,5 @@ jobs:
         with:
           enable-cache: true
       - run: uv sync
-      - run: uv add --dev bandit
-      
       - name: Security scan
         run: uv run bandit -r cli/ -ll
