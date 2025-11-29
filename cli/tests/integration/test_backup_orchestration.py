@@ -1,4 +1,3 @@
-import pytest
 from moto import mock_aws
 import boto3
 from unittest.mock import patch

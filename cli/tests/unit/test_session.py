@@ -1,4 +1,3 @@
-import pytest
 from datetime import datetime
 from cli.internal.aws.session import generate_session_name
 

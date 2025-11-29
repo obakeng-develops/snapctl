@@ -1,4 +1,3 @@
-import pytest
 import boto3
 from unittest.mock import Mock, patch
 from cli.internal.aws.client import get_client

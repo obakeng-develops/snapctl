@@ -1,4 +1,3 @@
-import pytest
 from cli.internal.aws.resource_filtering import parse_tag_filter, matches_tag_filter
 
 
