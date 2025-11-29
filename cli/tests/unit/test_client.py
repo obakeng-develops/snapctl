@@ -14,8 +14,8 @@ class TestGetClient:
 
         result = get_client("rds", mock_session, "us-west-2")
 
-        # Should call session.client with service and region
-        mock_session.client.assert_called_once_with("rds", "us-west-2")
+        # Should call session.client with service and region_name keyword
+        mock_session.client.assert_called_once_with("rds", region_name="us-west-2")
         assert result == mock_client
 
     def test_get_client_without_session(self):
@@ -26,8 +26,8 @@ class TestGetClient:
 
             result = get_client("rds", None, "us-east-1")
 
-            # Should use boto3.client directly
-            mock_boto_client.assert_called_once_with("rds")
+            # Should use boto3.client directly with region_name
+            mock_boto_client.assert_called_once_with("rds", region_name="us-east-1")
             assert result == mock_client
 
     def test_get_client_different_services(self):
@@ -36,15 +36,15 @@ class TestGetClient:
 
         # Test RDS
         get_client("rds", mock_session, "us-east-1")
-        mock_session.client.assert_called_with("rds", "us-east-1")
+        mock_session.client.assert_called_with("rds", region_name="us-east-1")
 
         # Test EC2
         get_client("ec2", mock_session, "us-east-1")
-        mock_session.client.assert_called_with("ec2", "us-east-1")
+        mock_session.client.assert_called_with("ec2", region_name="us-east-1")
 
         # Test STS
         get_client("sts", mock_session, "us-east-1")
-        mock_session.client.assert_called_with("sts", "us-east-1")
+        mock_session.client.assert_called_with("sts", region_name="us-east-1")
 
     def test_get_client_different_regions(self):
         """Create clients for different regions."""
@@ -55,4 +55,4 @@ class TestGetClient:
 
         for region in regions:
             get_client("rds", mock_session, region)
-            mock_session.client.assert_called_with("rds", region)
+            mock_session.client.assert_called_with("rds", region_name=region)
