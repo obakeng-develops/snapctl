@@ -11,4 +11,4 @@ def get_client(
     if session:
         return session.client(service_name, region_name=region)  # type: ignore[call-overload]
     else:
-        return boto3.client(service_name, region_name=region) # type: ignore[call-overload]
+        return boto3.client(service_name, region_name=region)  # type: ignore[call-overload]
