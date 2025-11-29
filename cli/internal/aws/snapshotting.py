@@ -21,6 +21,7 @@ def initiate_snapshot(resource: dict[str, any], session: boto3.Session, region: 
         })
                             
         logger.info(f"Successfully initiated snapshot for cluster: {resource_id}")
+        return snapshot_result
     except Exception as e:
         snapshot_results.append({
             'cluster_id': resource_id,
@@ -28,6 +29,7 @@ def initiate_snapshot(resource: dict[str, any], session: boto3.Session, region: 
             'error': str(e)
         })
         logger.error(f"Failed to create snapshot for cluster {resource_id}: {str(e)}")
+        raise
 
 def check_snapshot_status(snapshot_id: str, session: boto3.Session, region: str) -> str:
     """Check the current status of a snapshot."""
