@@ -57,7 +57,7 @@ def aws_plan(config: dict, session: boto3.Session):
             case "rds":
                 format_rds_resources(resource_group)
             case "ebs":
-                console.print(f"[yellow]⚠[/yellow] EBS support coming soon")
+                console.print("[yellow]⚠[/yellow] EBS support coming soon")
             case _:
                 console.print(f"[yellow]⚠[/yellow] Unsupported resource type: {resource_group['type']}")
     
@@ -66,6 +66,6 @@ def aws_plan(config: dict, session: boto3.Session):
     console.print()
     if total_resources > 0:
         console.print(f"[bold green]✓[/bold green] Plan is valid. Found {total_resources} resource(s) to backup.")
-        console.print(f"[dim]Run[/dim] [bold]snapctl backup --config <file>[/bold] [dim]to execute[/dim]")
+        console.print("[dim]Run[/dim] [bold]snapctl backup --config <file>[/bold] [dim]to execute[/dim]")
     else:
         console.print("[bold yellow]⚠[/bold yellow] No resources found matching the filters.")

@@ -1,5 +1,4 @@
 """Integration tests for plan command - shows actual formatted output."""
-import pytest
 from moto import mock_aws
 import boto3
 from typer.testing import CliRunner
