@@ -7,18 +7,21 @@ from cli.internal.aws.session import create_session
 
 app = typer.Typer()
 
+
 @app.command()
 def plan(
-    file_path: Annotated[str, typer.Option("-c", "--config", help="Config file used for defining resources")]
+    file_path: Annotated[
+        str,
+        typer.Option("-c", "--config", help="Config file used for defining resources"),
+    ],
 ):
-    """Speculatively show a plan of all the resources that will be backed up.
-    """
+    """Speculatively show a plan of all the resources that will be backed up."""
     config = read_config(file_path)
     provider = config["provider"]["name"]
-    
+
     auth = config["auth"]
     session = create_session(auth)
-    
+
     match provider:
         case "aws":
             aws_plan(config, session)

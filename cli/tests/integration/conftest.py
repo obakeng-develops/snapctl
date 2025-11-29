@@ -7,22 +7,17 @@ def sample_config():
     """Standard test configuration."""
     return {
         "app": "test-app",
-        "provider": {
-            "name": "aws",
-            "region": "us-east-1"
-        },
-        "auth": {
-            "profile": "test-profile"
-        },
+        "provider": {"name": "aws", "region": "us-east-1"},
+        "auth": {"profile": "test-profile"},
         "backup": {
             "resources": [
                 {
                     "type": "rds",
                     "name": "production-databases",
-                    "tags": "tag:Environment=prod"
+                    "tags": "tag:Environment=prod",
                 }
             ]
-        }
+        },
     }
 
 
