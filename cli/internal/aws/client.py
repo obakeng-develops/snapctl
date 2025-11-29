@@ -9,6 +9,6 @@ def get_client(
 ) -> Any:
     """Create and return a boto3 client for the specified AWS service."""
     if session:
-        return session.client(service_name, region_name=region)
+        return session.client(service_name, region_name=region)  # type: ignore[call-overload]
     else:
-        return boto3.client(service_name, region_name=region)
+        return boto3.client(service_name, region_name=region) # type: ignore[call-overload]

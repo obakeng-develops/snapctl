@@ -17,7 +17,7 @@ def validate(
     ],
     auth: Annotated[
         bool, typer.Option("-a", "--auth", help="Validate authentication")
-    ] = None,
+    ] = False,
 ):
     config = read_config(file_path)
     app_name = config.get("app", None)
@@ -38,6 +38,10 @@ def validate(
 
     if provider.get("region", None) is None:
         logger.error("Region key is required")
+        raise typer.Exit(code=1)
+
+    if backup is None:
+        logger.error("Backup configuration is required")
         raise typer.Exit(code=1)
 
     if backup.get("resources", None) is None:

@@ -48,7 +48,7 @@ def matches_tag_filter(
 
 
 def list_resource_by_tag(
-    client: boto3.client, service: str, tag_filter: str
+    client: Any, service: str, tag_filter: str
 ) -> list[dict[str, Any]]:
     """
     List resources matching the tag filter.
