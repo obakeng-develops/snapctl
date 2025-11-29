@@ -46,21 +46,34 @@ def list_resource_by_tag(client: boto3.client, service: str, tag_filter: str) ->
     """
     List resources matching the tag filter.
     tag_filter supports: "tag:Key=Value AND tag:Key2=Value2 OR tag:Key3=Value3"
+    
+    For RDS: Returns both DB instances AND DB clusters.
     """
     matching_resources = []
     or_groups = parse_tag_filter(tag_filter)
     
     match service:
         case "rds":
-            paginator = client.get_paginator('describe_db_instances')
-        
-            for page in paginator.paginate():
+            # Get DB Instances
+            instance_paginator = client.get_paginator('describe_db_instances')
+            for page in instance_paginator.paginate():
                 for db in page['DBInstances']:
                     db_arn = db['DBInstanceArn']
                     tags_response = client.list_tags_for_resource(ResourceName=db_arn)
                         
                     if matches_tag_filter(tags_response['TagList'], or_groups):
                         matching_resources.append(db)
+            
+            # Get DB Clusters (Aurora, etc.)
+            cluster_paginator = client.get_paginator('describe_db_clusters')
+            for page in cluster_paginator.paginate():
+                for cluster in page['DBClusters']:
+                    cluster_arn = cluster['DBClusterArn']
+                    tags_response = client.list_tags_for_resource(ResourceName=cluster_arn)
+                    
+                    if matches_tag_filter(tags_response['TagList'], or_groups):
+                        matching_resources.append(cluster)
+        
         case _:
             raise ValueError(f"Unsupported service: {service}")
         
