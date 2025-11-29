@@ -41,7 +41,7 @@ def check_snapshot_status(snapshot_id: str, session: boto3.Session, region: str)
     response = client.describe_db_cluster_snapshots(
         DBClusterSnapshotIdentifier=snapshot_id
     )
-    status: str = response['DBClusterSnapshots'][0]['Status']
+    status: str = response["DBClusterSnapshots"][0]["Status"]
     return status
 
 
@@ -66,7 +66,7 @@ def create_cluster_snapshot(
             ],
         )
 
-        result: Dict[str, Any] = response['DBClusterSnapshot']
+        result: Dict[str, Any] = response["DBClusterSnapshot"]
         return result
     except Exception as e:
         logger.error(f"Error creating snapshot for {cluster_id}: {str(e)}")
