@@ -1,13 +1,14 @@
 import structlog
 import boto3
 import time
+from typing import Any
 from .snapshotting import initiate_snapshot, check_snapshot_status
 
-POLL_INTERVAL = 30 #seconds
+POLL_INTERVAL = 30  # seconds
 
 logger = structlog.get_logger()
 
-def backup_rds_resources(resources: list[dict[str, any]], session: boto3.Session, region: str, parallel: int):
+def backup_rds_resources(resources: list[dict[str, Any]], session: boto3.Session, region: str, parallel: int) -> None:
     """Backup RDS resources with parallel execution and polling."""
     available_clusters = [
         resource for resource in resources if resource["Status"] == "available"
@@ -19,7 +20,7 @@ def backup_rds_resources(resources: list[dict[str, any]], session: boto3.Session
 
     logger.info(f"Starting backup for {len(available_clusters)} Aurora cluster(s)")
     
-    in_progress = []
+    in_progress: list[dict[str, Any]] = []
     pending = list(available_clusters)
 
     while pending or in_progress:

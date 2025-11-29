@@ -6,7 +6,7 @@ from .client import get_client
 
 logger = structlog.get_logger()
 
-def initiate_snapshot(resource: dict[str, any], session: boto3.Session, region: None = "us-east-1") -> str:
+def initiate_snapshot(resource: dict[str, Any], session: boto3.Session, region: str = "us-east-1") -> Dict[str, Any]:
     snapshot_results = []
     resource_id = resource['DBClusterIdentifier']
     prefix = "backup"
