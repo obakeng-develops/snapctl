@@ -23,28 +23,29 @@ def backup_rds_resources(resources: list[dict[str, any]], session: boto3.Session
     pending = list(available_clusters)
 
     while pending or in_progress:
+        # Start new backups up to parallel limit
         while len(in_progress) < parallel and pending:
             resource = pending.pop(0)
             snapshot_result = initiate_snapshot(resource, session, region)
             in_progress.append({
-                                'cluster': resource['DBClusterIdentifier'],
-                                'snapshot_id': snapshot_result['DBClusterSnapshotIdentifier'],
-                                'snapshot_arn': snapshot_result['DBClusterSnapshotArn'],
-                                'started': time.time()
+                'cluster': resource['DBClusterIdentifier'],
+                'snapshot_id': snapshot_result['DBClusterSnapshotIdentifier'],
+                'snapshot_arn': snapshot_result['DBClusterSnapshotArn'],
+                'started': time.time()
             })
             logger.info(f"Started backup: {snapshot_result['DBClusterSnapshotIdentifier']}")
-                            
-                        # Poll for completion
-            if in_progress:
-                time.sleep(POLL_INTERVAL)
-                            
-                completed = []
-                for backup in in_progress:
-                    status = check_snapshot_status(backup['snapshot_id'], session, region)
-                    if status in ["available", "failed"]:
-                        duration = time.time() - backup['started']
-                        logger.info(f"Backup {backup['snapshot_id']}: {status} (took {duration:.0f}s)")
-                        completed.append(backup)
-                                    
-                    for backup in completed:
-                        in_progress.remove(backup)
+        
+        # Poll for completion
+        if in_progress:
+            time.sleep(POLL_INTERVAL)
+            
+            completed = []
+            for backup in in_progress:
+                status = check_snapshot_status(backup['snapshot_id'], session, region)
+                if status in ["available", "failed"]:
+                    duration = time.time() - backup['started']
+                    logger.info(f"Backup {backup['snapshot_id']}: {status} (took {duration:.0f}s)")
+                    completed.append(backup)
+            
+            for backup in completed:
+                in_progress.remove(backup)
