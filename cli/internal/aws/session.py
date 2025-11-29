@@ -1,20 +1,22 @@
 import boto3
 from datetime import datetime
+from typing import Any
+from typing import Optional
 
 
-def generate_session_name(app_name):
+def generate_session_name(app_name: str) -> str:
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
     return f"{app_name}-backup-{timestamp}"
 
 
-def create_session_with_role(auth_config: dict) -> boto3.Session:
+def create_session_with_role(auth_config: dict[str, Any]) -> boto3.Session:
     """Create session by assuming role"""
     app_name = auth_config["app"]
 
     if "profile" in auth_config:
         session = boto3.Session(profile_name=auth_config["profile"])
-        sts_client = session.Client("sts")
+        sts_client = session.client("sts")
     else:
         sts_client = boto3.client("sts")
 
@@ -32,13 +34,13 @@ def create_session_with_role(auth_config: dict) -> boto3.Session:
     )
 
 
-def create_session_with_profile(auth_config) -> boto3.Session:
+def create_session_with_profile(auth_config: dict[str, Any]) -> boto3.Session:
     """Create session with a named profile"""
     return boto3.Session(profile_name=auth_config["profile"])
 
 
-def create_session(auth_config) -> boto3.Session:
-    session = None
+def create_session(auth_config: dict[str, Any]) -> boto3.Session:
+    session: Optional[boto3.Session] = None
     if "role_arn" in auth_config:
         session = create_session_with_role(auth_config)
     elif "profile" in auth_config:

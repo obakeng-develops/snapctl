@@ -50,7 +50,7 @@ def validate(
         logger.error("Resources key is required")
         raise typer.Exit(code=1)
 
-    for resource in backup["resources"]:
+    for resource in resources:
         if resource["type"] is None:
             logger.error("Resource type is required")
             raise typer.Exit(code=1)
