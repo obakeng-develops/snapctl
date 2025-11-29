@@ -1,59 +1,52 @@
 from typing import Any
 from rich.console import Console
-from rich.panel import Panel
 from rich.tree import Tree
-from rich import box
 
-def format_rds_cluster(config: dict, instances: list[dict[str, Any]]):
-    """Format RDS cluster data for terminal display with only important info"""
-    app_name = config["app"]
-    region = config["provider"]["region"]
-    resource_name = config["backup"]["resources"][0]["name"]
-    tags = config["backup"]["resources"][0]["discover"]
-    auth = config["auth"]
+console = Console()
+
+def format_rds_resources(resource_group: dict[str, Any]):
+    """Format RDS resources for terminal display."""
+    resource_name = resource_group["name"]
+    tags = resource_group["tags"]
+    resources = resource_group["resources"]
     
-    console = Console()
-
-    if "profile" in auth:
-        # Header Panel
-        header = Panel(
-            f"[bold cyan]App:[/bold cyan] {app_name}\n"
-            f"[bold cyan]Region:[/bold cyan] {region}\n"
-            f"[bold cyan]Profile:[/bold cyan] {auth["profile"]}",
-            title="[bold white]Backup Plan Preview[/bold white]",
-            border_style="cyan",
-            box=box.ROUNDED
-        )
-        console.print(header)
-        console.print()
-    else:
-        # Header Panel
-        header = Panel(
-            f"[bold cyan]App:[/bold cyan] {app_name}\n"
-            f"[bold cyan]Region:[/bold cyan] {region}\n"
-            f"[bold cyan]Role ARN:[/bold cyan] {auth["role_arn"]}",
-            title="[bold white]Backup Plan Preview[/bold white]",
-            border_style="cyan",
-            box=box.ROUNDED
-        )
-        console.print(header)
-        console.print()
-
-    # Resources Tree
-    console.print("[bold]🗄️  Resources to Backup[/bold]")
-    console.print()
-
+    console.print(f"[bold]🗄️  RDS Resources[/bold] [dim]({resource_name})[/dim]")
+    
     tree = Tree(
-        f"[bold cyan]RDS Instances[/bold cyan] [dim]({resource_name})[/dim]",
+        f"[bold cyan]Filter:[/bold cyan] {tags}",
         guide_style="dim"
     )
-    tree.add(f"[dim]Filter:[/dim] {tags}")
-    found_branch = tree.add(f"[green]Found: {len(instances)} instances[/green]")
-    for instance in instances:
-        found_branch.add(f"[cyan]{instance['DBInstanceIdentifier']}[/cyan] [dim]({instance['DBInstanceClass']})[/dim]")
-
+    
+    if not resources:
+        tree.add("[yellow]No resources found[/yellow]")
+    else:
+        found_branch = tree.add(f"[green]Found: {len(resources)} resource(s)[/green]")
+        
+        for resource in resources:
+            # Handle both DB instances and clusters
+            if "DBInstanceIdentifier" in resource:
+                identifier = resource["DBInstanceIdentifier"]
+                instance_class = resource.get("DBInstanceClass", "unknown")
+                engine = resource.get("Engine", "unknown")
+                status = resource.get("DBInstanceStatus", "unknown")
+                
+                status_color = "green" if status == "available" else "yellow"
+                found_branch.add(
+                    f"[cyan]Instance:[/cyan] {identifier} "
+                    f"[dim]({instance_class}, {engine})[/dim] "
+                    f"[{status_color}]{status}[/{status_color}]"
+                )
+            elif "DBClusterIdentifier" in resource:
+                identifier = resource["DBClusterIdentifier"]
+                engine = resource.get("Engine", "unknown")
+                status = resource.get("Status", "unknown")
+                
+                status_color = "green" if status == "available" else "yellow"
+                found_branch.add(
+                    f"[cyan]Cluster:[/cyan] {identifier} "
+                    f"[dim]({engine})[/dim] "
+                    f"[{status_color}]{status}[/{status_color}]"
+                )
+    
     console.print(tree)
     console.print()
-
-    # Success message
-    console.print("[bold green]✓[/bold green] Plan is valid. Run with [bold]snapctl run -c[/bold] to apply.")
