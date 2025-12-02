@@ -1,5 +1,10 @@
 # sumi
 
+[![PyPI version](https://badge.fury.io/py/sumi.svg)](https://pypi.org/project/sumi/)
+[![Python 3.13+](https://img.shields.io/badge/python-3.13+-blue.svg)](https://www.python.org/downloads/)
+[![Tests](https://github.com/obakengdevelops/sumi/actions/workflows/ci.yml/badge.svg)](https://github.com/obakengdevelops/sumi/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 `sumi` is a CLI tool that allows you to setup production-grade backups and disaster recovery in under 5 minutes with one config file. Currently, it supports AWS RDS instances and Aurora clusters.
 
 ## Features
@@ -11,8 +16,22 @@
 
 ## Installation
 
+### From PyPI (Recommended)
+
+```bash
+pip install sumi
+```
+
+### From Source (Development Version)
+
 ```bash
 pip install git+https://github.com/obakengdevelops/sumi.git
+```
+
+### Using uv
+
+```bash
+uv pip install sumi
 ```
 
 ## Quick Start
