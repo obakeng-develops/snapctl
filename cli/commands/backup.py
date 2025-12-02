@@ -83,7 +83,7 @@ def backup(
                                 backup_rds_resources(resources, session, region, parallel)
                             except ClientError as e:
                                 logger.error(f"AWS API error during backup: {e}")
-                                logger.error(f"Check IAM permissions for RDS snapshot creation")
+                                logger.error("Check IAM permissions for RDS snapshot creation")
                             except Exception as e:
                                 logger.error(f"Backup failed: {e}")
                         case _:
