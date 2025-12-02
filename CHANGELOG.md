@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.0] - 2025-12-01
 
 ### Added
-- Initial release of snapctl
+- Initial release of sumi
 - **Backup command** - Execute backups with parallel execution and status polling
 - **Plan command** - Preview resources that will be backed up with Rich UI
 - **Validate command** - Validate configuration structure and AWS credentials
@@ -49,5 +49,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Profile and role-based authentication
 - Configurable parallelism
 
-[Unreleased]: https://github.com/obakengdevelops/snapctl/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/obakengdevelops/snapctl/releases/tag/v0.1.0
+[Unreleased]: https://github.com/obakengdevelops/sumi/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/obakengdevelops/sumi/releases/tag/v0.1.0

@@ -1,5 +1,5 @@
 [project]
-name = "snapctl"
+name = "sumi"
 version = "0.1.0"
 description = "Automate your backup and restores with one config file."
 readme = "README.md"
@@ -41,11 +41,11 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/obakengdevelops/snapctl"
-Documentation = "https://github.com/obakengdevelops/snapctl#readme"
-Repository = "https://github.com/obakengdevelops/snapctl"
-Issues = "https://github.com/obakengdevelops/snapctl/issues"
-Changelog = "https://github.com/obakengdevelops/snapctl/blob/main/CHANGELOG.md"
+Homepage = "https://github.com/obakengdevelops/sumi"
+Documentation = "https://github.com/obakengdevelops/sumi#readme"
+Repository = "https://github.com/obakengdevelops/sumi"
+Issues = "https://github.com/obakengdevelops/sumi/issues"
+Changelog = "https://github.com/obakengdevelops/sumi/blob/main/CHANGELOG.md"
 
 [build-system]
 requires = ["hatchling"]
@@ -55,7 +55,7 @@ build-backend = "hatchling.build"
 packages = ["cli"]
 
 [project.scripts]
-snapctl = "cli.commands.main:app"
+sumi = "cli.commands.main:app"
 
 [tool.mypy]
 python_version = "3.13"
