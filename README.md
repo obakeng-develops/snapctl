@@ -5,7 +5,7 @@
 [![Tests](https://github.com/obakengdevelops/sumi/actions/workflows/ci.yml/badge.svg)](https://github.com/obakengdevelops/sumi/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-`sumi` is a CLI tool that allows you to setup production-grade backups and disaster recovery in under 5 minutes with one config file. Currently, it supports AWS RDS instances and Aurora clusters.
+`sumi` is a CLI tool that allows you to setup production-grade backups and disaster recovery one config file. Currently, it supports AWS RDS instances and Aurora clusters.
 
 ## Features
 
