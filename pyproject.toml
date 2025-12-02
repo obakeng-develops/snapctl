@@ -1,24 +1,51 @@
 [project]
-name = "snapctl"
+name = "sumi"
 version = "0.1.0"
-description = "Add your description here"
+description = "Automate your backup and restores with one config file."
 readme = "README.md"
 requires-python = ">=3.13"
+license = {text = "MIT"}
+authors = [
+    {name = "Obakeng", email = "mosadiobakeng7@gmail.com"}
+]
+keywords = ["aws", "backup", "rds", "disaster-recovery", "cli", "devops", "aurora", "restore", "data", "site-reliability-engineering", "automation"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: System Administrators",
+    "Topic :: System :: Archiving :: Backup",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.13",
+    "Environment :: Console",
+    "Operating System :: OS Independent",
+    "Typing :: Typed",
+]
 dependencies = [
     "boto3>=1.40.37",
     "pyyaml>=6.0.2",
-    "ruff>=0.13.1",
     "rich>=14.1.0",
     "typer>=0.19.2",
     "structlog>=25.5.0",
+]
+[project.optional-dependencies]
+dev = [
     "pytest>=9.0.1",
     "pytest-cov>=6.0.0",
     "mypy>=1.0",
     "boto3-stubs>=1.34",
     "types-PyYAML>=6.0",
     "moto>=5.0",
+    "ruff>=0.13.1",
     "bandit>=1.7",
 ]
+
+[project.urls]
+Homepage = "https://github.com/obakengdevelops/sumi"
+Documentation = "https://github.com/obakengdevelops/sumi#readme"
+Repository = "https://github.com/obakengdevelops/sumi"
+Issues = "https://github.com/obakengdevelops/sumi/issues"
+Changelog = "https://github.com/obakengdevelops/sumi/blob/main/CHANGELOG.md"
 
 [build-system]
 requires = ["hatchling"]
@@ -28,7 +55,7 @@ build-backend = "hatchling.build"
 packages = ["cli"]
 
 [project.scripts]
-snapctl = "cli.commands.main:app"
+sumi = "cli.commands.main:app"
 
 [tool.mypy]
 python_version = "3.13"

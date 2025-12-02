@@ -1,6 +1,6 @@
-# snapctl
+# sumi
 
-`snapctl` is a CLI tool that allows you to setup production-grade backups and disaster recovery in under 5 minutes with one config file. Currently, it supports AWS RDS instances and Aurora clusters.
+`sumi` is a CLI tool that allows you to setup production-grade backups and disaster recovery in under 5 minutes with one config file. Currently, it supports AWS RDS instances and Aurora clusters.
 
 ## Features
 
@@ -12,7 +12,7 @@
 ## Installation
 
 ```bash
-pip install git+https://github.com/obakengdevelops/snapctl.git
+pip install git+https://github.com/obakengdevelops/sumi.git
 ```
 
 ## Quick Start
@@ -45,24 +45,24 @@ backup:
 
 ```bash
 # Validate config structure
-snapctl validate --config backup-config.yaml
+sumi validate --config backup-config.yaml
 
 # Validate config AND test AWS credentials
-snapctl validate --config backup-config.yaml --auth
+sumi validate --config backup-config.yaml --auth
 ```
 
 ### 3. Preview Resources
 
 ```bash
 # See what will be backed up (dry-run)
-snapctl plan --config backup-config.yaml
+sumi plan --config backup-config.yaml
 ```
 
 ### 4. Execute Backup
 
 ```bash
 # Run backup with 3 parallel snapshots
-snapctl backup --config backup-config.yaml --parallel 3
+sumi backup --config backup-config.yaml --parallel 3
 ```
 
 ## Tag Filter Examples
@@ -93,22 +93,22 @@ discover: "tag:Env=prod AND tag:Backup=true OR tag:Critical=yes"
 Validate your configuration file structure and optionally test AWS credentials.
 
 ```bash
-snapctl validate --config <file>        # Validate config structure
-snapctl validate --config <file> --auth # Also test AWS credentials
+sumi validate --config <file>        # Validate config structure
+sumi validate --config <file> --auth # Also test AWS credentials
 ```
 
 ### plan
 Preview all resources that will be backed up without making any changes.
 
 ```bash
-snapctl plan --config <file>
+sumi plan --config <file>
 ```
 
 ### backup
 Execute backups for all configured resources.
 
 ```bash
-snapctl backup --config <file> --parallel 3  # Run 3 backups in parallel
+sumi backup --config <file> --parallel 3  # Run 3 backups in parallel
 ```
 
 ## Configuration Reference
@@ -144,8 +144,8 @@ backup:
 
 ```bash
 # Clone repository
-git clone https://github.com/obakengdevelops/snapctl.git
-cd snapctl
+git clone https://github.com/obakengdevelops/sumi.git
+cd sumi
 
 # Install with uv
 uv sync

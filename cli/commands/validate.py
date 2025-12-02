@@ -29,7 +29,7 @@ def validate(
     except Exception as e:
         logger.error(f"Failed to read config: {e}")
         raise typer.Exit(code=1)
-    
+
     # Validate required top-level keys
     app_name = config.get("app", None)
     provider = config.get("provider", None)
@@ -97,7 +97,7 @@ def validate(
 def validate_auth(config: dict):
     """Validate AWS authentication by attempting to get caller identity."""
     auth = config.get("auth")
-    
+
     if not auth:
         logger.error("Auth configuration is required")
         raise typer.Exit(code=1)
@@ -114,12 +114,12 @@ def validate_auth(config: dict):
 def validate_profile(auth: dict):
     """Validate AWS profile by testing STS access."""
     profile = auth["profile"]
-    
+
     try:
         session = create_session(auth)
         client = session.client("sts")
         response = client.get_caller_identity()
-        
+
         logger.info(f"✓ Profile '{profile}' is valid")
         logger.info(f"  Account: {response['Account']}")
         logger.info(f"  ARN: {response['Arn']}")
@@ -140,17 +140,17 @@ def validate_profile(auth: dict):
 def validate_role_arn(auth: dict):
     """Validate AWS role by attempting to assume it."""
     role_arn = auth["role_arn"]
-    
+
     try:
         session = create_session(auth)
         client = session.client("sts")
         response = client.get_caller_identity()
-        
+
         logger.info(f"✓ Role ARN '{role_arn}' is valid")
         logger.info(f"  Account: {response['Account']}")
         logger.info(f"  ARN: {response['Arn']}")
     except ClientError as e:
-        if e.response['Error']['Code'] == 'AccessDenied':
+        if e.response["Error"]["Code"] == "AccessDenied":
             logger.error(f"Access denied when assuming role: {role_arn}")
         else:
             logger.error(f"Failed to assume role: {e}")
