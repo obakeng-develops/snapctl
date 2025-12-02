@@ -9,6 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <!-- Add new changes here as you develop. 
      When releasing, move these to a new version section below. -->
 
+## [0.1.1] - 2025-12-02
+
+### Changed
+- Updated installation instructions using `uv`, `source` and `pip`.
+
+### Added
+-  Added badges at the top of the project README.
+
+
 ### Planned
 - Restore command for creating new RDS instances from snapshots
 - EBS volume backup support
