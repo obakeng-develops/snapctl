@@ -23,7 +23,8 @@ def backup(
         typer.Option("-c", "--config", help="Config file used for defining resources"),
     ],
     parallel: Annotated[
-        int, typer.Option("-p", "--parallel", help="Number of backups to run in parallel")
+        int,
+        typer.Option("-p", "--parallel", help="Number of backups to run in parallel"),
     ] = 3,
 ):
     """Execute backup for all configured resources."""
@@ -44,7 +45,9 @@ def backup(
     try:
         session = create_session(auth)
     except NoCredentialsError:
-        logger.error("No AWS credentials found. Configure with 'aws configure' or check your profile")
+        logger.error(
+            "No AWS credentials found. Configure with 'aws configure' or check your profile"
+        )
         raise typer.Exit(code=1)
     except Exception as e:
         logger.error(f"Failed to create AWS session: {e}")
@@ -58,7 +61,9 @@ def backup(
                     resource_name = resource_config["name"]
                     tags = resource_config["discover"]
 
-                    logger.info(f"\n=== Processing {resource_name} ({service_type}) ===")
+                    logger.info(
+                        f"\n=== Processing {resource_name} ({service_type}) ==="
+                    )
                     logger.info(f"Discovering resources with: {tags}")
 
                     try:
@@ -80,23 +85,29 @@ def backup(
                     match service_type:
                         case "rds":
                             try:
-                                backup_rds_resources(resources, session, region, parallel)
+                                backup_rds_resources(
+                                    resources, session, region, parallel
+                                )
                             except ClientError as e:
                                 logger.error(f"AWS API error during backup: {e}")
-                                logger.error("Check IAM permissions for RDS snapshot creation")
+                                logger.error(
+                                    "Check IAM permissions for RDS snapshot creation"
+                                )
                             except Exception as e:
                                 logger.error(f"Backup failed: {e}")
                         case _:
-                            logger.error(f"Resource type {service_type} is not supported yet.")
+                            logger.error(
+                                f"Resource type {service_type} is not supported yet."
+                            )
                             continue
-                            
+
             except KeyError as e:
                 logger.error(f"Missing required configuration key: {e}")
                 raise typer.Exit(code=1)
             except Exception as e:
                 logger.error(f"Unexpected error during backup: {e}")
                 raise typer.Exit(code=1)
-                
+
         case _:
             logger.error(f"Provider {provider} is not supported yet.")
             raise typer.Exit(code=1)

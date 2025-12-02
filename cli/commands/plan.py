@@ -14,8 +14,9 @@ logger = structlog.get_logger()
 @app.command()
 def plan(
     file_path: Annotated[
-        str, typer.Option("-c", "--config", help="Config file used for defining resources")
-    ]
+        str,
+        typer.Option("-c", "--config", help="Config file used for defining resources"),
+    ],
 ):
     """Speculatively show a plan of all the resources that will be backed up."""
     try:
@@ -33,7 +34,9 @@ def plan(
     try:
         session = create_session(auth)
     except NoCredentialsError:
-        logger.error("No AWS credentials found. Configure with 'aws configure' or check your profile")
+        logger.error(
+            "No AWS credentials found. Configure with 'aws configure' or check your profile"
+        )
         raise typer.Exit(code=1)
     except Exception as e:
         logger.error(f"Failed to create AWS session: {e}")
